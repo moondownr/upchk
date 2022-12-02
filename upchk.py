@@ -24,7 +24,7 @@ mail_subject = """\
 
 
     """
-timeout = 10 #time between ping attempts, seconds
+timeout = 300 #time between ping attempts, seconds
 
 #leave empty
 mail_content = ""
