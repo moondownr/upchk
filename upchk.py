@@ -17,7 +17,7 @@ smtp_password = os.getenv('SMTP_PASS')
 mail_from = os.getenv('MAIL_FROM')
 mail_to = os.getenv('MAIL_TO')
 
-#configure here
+# configure here
 ping_targets = ["google.com","1.1.1.1"]
 mail_subject = """\
     Subject: Failed ping targets
@@ -26,7 +26,7 @@ mail_subject = """\
     """
 timeout = 300 #time between ping attempts, seconds
 
-#leave empty
+# leave empty
 mail_content = ""
 failed_hosts = []
 
