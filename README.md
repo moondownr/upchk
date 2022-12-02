@@ -1,31 +1,5 @@
 # upchk
-Python script for monitoring remote hosts and notifying about their status
 
+Python script for monitoring remote hosts and notifying about their status. Instead of using cron it relies on it's own built-in timer and is meant to be running all the time.
 
-!!!!!!!!!!!!!!!!!!!!?B&@@@&&GJ!!777!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!7GBBBG&#GPPPPGB#BB#&&#P7!!!!!!!!!!!!
-!!!!!!!!!!!!!?##PPPPP555555555GPPPPG&&7!!!!!!!!!!!
-!!!!!!!!!!!J##B555555555555555555555P##BJ77?JY55PP
-!!!!!!!!!!?@&55555555555555555555555555B@BGGGGGGPP
-!!!!!!!!!!7#@BGPGG55555555555555555P5PB&&PPPPPPPPP
-!!!!!!!!!!!!B@&&G&#GGBGP5555PGGGGB#B&#@#PPPPPPPPPP
-!!!!!!!!!!!!P@GB^?G#G5####B#B55GGY!~#P@BPPPPPPPPPP
-!!!!!!!!!!!!5@&PJ55PPGP!!7!7PGBBBGJ!#B&PPPPPPPPPPP
-!!!!!!!!!!!75@@Y^~~~~~^~^^^^^~~~~!??#&#PPPPPPPPPPP
-!!!!!!!!!7BB5B@Y!!^^5B!7P^^^~7~~?G7J@@GPGBGGBGGGGG
-!!!!!!!!!5@5??#Y^^^^^~^?P^^^~^::^?!J&JYJ5@5YYYYYYY
-!!!!5P55PP##!?&7~~7~!^!G~^^~^^7~!~~~BBG?&&PPGGGGGG
-!!!!#GY55YY#&Y#?7^!!~~#?^~!JG~~^7~7!#?G@B55YYYYYYJ
-!!!!GGPPPBGG&!5B^^~7~^?Y?77JJ^^7!^^55^B#JJJJJJJJJJ
-!!!!!77!!G5JGBB&?^??!^^^~^^^^~!7?^7&PPBYJJJJYYJJJJ
-J7!!!!!!!GPJJYJP&7^!PY!7~!~7~Y5~^~#PYYJJJJYYJJYYYY
-PPP5J?7!!PPJJJJJB&!^~P##B#B&#P~^^#&5PPPPPPPPGG5555
-YYY55PP5JGPJJYB55B&!^~5G5GYG5~^^G&#J777777775G!7!7
-YYYYYYYY5BGJJ5#7!!P&?^^!???7^^!B#P#J!77777!!YB!777
-YYYYYYYYJGBJJY#?!7!J&#P5YYYYYG&#P5#J!777777!JB7777
-YYYYYYYYYGBJJY#?!!!Y&@Y7BPYJ75@5&##Y!777777!?B7777
-PPGGGGGGGBBJJY#J!?B5#@7^~!^^^5#~~&@5!7777777?#7!77
-YYYYYYYYYGBJJJ#55&Y~&P~^^^~J57...B@G!!!!!!!!7#?!7!
-YYYYYYYYYPBJ5B&#B&7G&JJ?J5B7:..^#GJ&#PYJJJJJJBY?J?
-YYYYYYYYYG&##5~.B&Y~#~:?GYGJ..!&5..:7G&&BP555P555P
-GGGPPPGB&&P!:..!&7..?5J5^.:&7?&?..:...^Y&&B5JJJJJJ
+To your left, the home of the town director of public works, built on unstable landfill. To your right, a flattened squirrel. Straight ahead, the future! (c) Charles Upchuck Ruttheimer III
