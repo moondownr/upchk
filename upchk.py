@@ -1,29 +1,37 @@
 #!/usr/bin/env python3
 
+import os
 import subprocess
 import smtplib
 import ssl
 import time
+from dotenv import load_dotenv
 
-ping_targets=["minimoon.duckdns.org","fvpn.bbdo.ua"]
-failed_hosts=[]
-smtp_server="smtppro.zoho.eu"
-smtp_port=587
-smtp_login="alex@mooncloud.space"
-smtp_password="F4qvD2xLwStr"
-mail_from="mooncloud@mooncloud.space"
-mail_to="alex@mooncloud.space"
-mail_content=""
-mail_subject="""\
+load_dotenv()
+
+# configure via .env file
+ping_targets = os.getenv('PING_TARGETS')
+smtp_server = os.getenv('SMTP_SERVER')
+smtp_port = os.getenv('SMTP_PORT')
+smtp_login = os.getenv('SMTP_LOGIN')
+smtp_password = os.getenv('SMTP_PASS')
+mail_from = os.getenv('MAIL_FROM')
+mail_to = os.getenv('MAIL_TO')
+
+#configure here
+mail_subject = """\
     Subject: Failed ping targets
 
 
     """
+timeout = 300 #time between ping attempts
 
-timeout=300
+#leave empty
+mail_content = ""
+failed_hosts = []
 
 def checkifup(host):
-    command = ['ping', "-c", '5', "-w10", host]
+    command = ['ping', "-c", '1', "-w5", host]
     if subprocess.run(command).returncode == 0:
         return True
     else:
