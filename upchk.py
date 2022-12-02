@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # configure via .env file
-ping_targets = os.getenv('PING_TARGETS')
 smtp_server = os.getenv('SMTP_SERVER')
 smtp_port = os.getenv('SMTP_PORT')
 smtp_login = os.getenv('SMTP_LOGIN')
@@ -19,12 +18,13 @@ mail_from = os.getenv('MAIL_FROM')
 mail_to = os.getenv('MAIL_TO')
 
 #configure here
+ping_targets = ["google.com","1.1.1.1"]
 mail_subject = """\
     Subject: Failed ping targets
 
 
     """
-timeout = 300 #time between ping attempts
+timeout = 10 #time between ping attempts, seconds
 
 #leave empty
 mail_content = ""
@@ -40,14 +40,26 @@ def checkifup(host):
 def sendmail():
     message = mail_subject+mail_content
     if smtp_port == 25:
-        with smtplib.SMTP(smtp_server,smtp_port) as server:
+        try:
+            server = smtplib.SMTP(smtp_server, smtp_port)
             server.login(smtp_login, smtp_password)
             server.sendmail(mail_from, mail_to, message)
+            server.quit()
+        except Exception as e:
+            print(e)
+        finally:
+            server.quit()
     elif smtp_port == 465:
         context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(smtp_server, smtp_port, context=context) as server:
-            server.login(smtp_login, smtp_password)
-            server.sendmail(mail_from, mail_to, message)
+        try:
+            with smtplib.SMTP_SSL(smtp_server, smtp_port, context=context) as server:
+                server.login(smtp_login, smtp_password)
+                server.sendmail(mail_from, mail_to, message)
+                server.quit()
+        except Exception as e:
+            print(e)
+        finally:
+            server.quit()
     elif smtp_port == 587:
         context = ssl.create_default_context()
         try:
