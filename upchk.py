@@ -11,7 +11,7 @@ load_dotenv()
 
 # configure via .env file
 smtp_server = os.getenv('SMTP_SERVER')
-smtp_port = os.getenv('SMTP_PORT')
+smtp_port = int(os.getenv('SMTP_PORT'))
 smtp_login = os.getenv('SMTP_LOGIN')
 smtp_password = os.getenv('SMTP_PASS')
 mail_from = os.getenv('MAIL_FROM')
