@@ -59,8 +59,9 @@ def get_status_message(targets):
     for host in targets:
         # target host is offline
         if not checkifup(host):
-            mail_content += f"{host} is offline\n"
-            failed_hosts.add(host)
+            if not host in failed_hosts:
+                mail_content += f"{host} is offline\n"
+                failed_hosts.add(host)
         else:
             # target host went back online
             if host in failed_hosts:
