@@ -5,6 +5,7 @@ import subprocess
 import smtplib
 import ssl
 import time
+import sys
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,6 +20,7 @@ mail_to = os.getenv('MAIL_TO')
 
 # configure here
 ping_targets = ["google.com","1.1.1.1"]
+failed_hosts = set()
 mail_subject = """\
     Subject: Failed ping targets
 
@@ -26,70 +28,53 @@ mail_subject = """\
     """
 timeout = 300 #time between ping attempts, seconds
 
-# leave empty
-mail_content = ""
-failed_hosts = []
-
 def checkifup(host):
     command = ['ping', "-c", '1', "-w5", host]
-    if subprocess.run(command).returncode == 0:
-        return True
-    else:
-        return False
+    return subprocess.run(command).returncode == 0
 
-def sendmail():
-    message = mail_subject+mail_content
-    if smtp_port == 25:
-        try:
-            server = smtplib.SMTP(smtp_server, smtp_port)
-            server.login(smtp_login, smtp_password)
-            server.sendmail(mail_from, mail_to, message)
-            server.quit()
-        except Exception as e:
-            print(e)
-        finally:
-            server.quit()
-    elif smtp_port == 465:
-        context = ssl.create_default_context()
-        try:
-            with smtplib.SMTP_SSL(smtp_server, smtp_port, context=context) as server:
-                server.login(smtp_login, smtp_password)
-                server.sendmail(mail_from, mail_to, message)
-                server.quit()
-        except Exception as e:
-            print(e)
-        finally:
-            server.quit()
-    elif smtp_port == 587:
-        context = ssl.create_default_context()
-        try:
-            server = smtplib.SMTP(smtp_server, smtp_port)
-            server.starttls(context=context)
-            server.login(smtp_login, smtp_password)
-            server.sendmail(mail_from, mail_to, message)
-        except Exception as e:
-            print(e)
-        finally:
-            server.quit()
-    else:
-        print("Not a valid smtp port!")
+def create_smtp_client(port):
+    if port == 25:
+        return smtplib.SMTP(smtp_server,smtp_port)
+    if port == 465:
+        return smtplib.SMTP_SSL(smtp_server, smtp_port, context=ssl.create_default_context())
+    if port == 587:
+        client = smtplib.SMTP(smtp_server, smtp_port)
+        client.starttls(context=ssl.create_default_context())
+        return client
+    raise Exception(f"{port} invalid SMTP port!")
 
-def upcheck():
-    global mail_content
-    global failed_hosts
-    for i in ping_targets:
-        if checkifup(i) == True:
-            if failed_hosts.count(i) > 0:
-                mail_content+=(f"{i} is online\n")
-                failed_hosts.remove(i)
+def send_message(message):
+    if message:
+        try:
+            client = create_smtp_client(smtp_port)
+            client.login(smtp_login, smtp_password)
+            client.sendmail(mail_from, mail_to, mail_subject + message)
+        except Exception as e:
+            print(e, file=sys.stderr)
+        finally:
+            client.quit()
+
+
+def get_status_message(targets):
+    mail_content = ""
+    for host in targets:
+        # target host is offline
+        if not checkifup(host):
+            mail_content += f"{host} is offline\n"
+            failed_hosts.add(host)
         else:
-            if failed_hosts.count(i) == 0:
-                mail_content+=(f"{i} is offline\n")
-                failed_hosts.append(i)
-    if mail_content:
-            sendmail()
-    mail_content=""
+            # target host went back online
+            if host in failed_hosts:
+                mail_content += f"{host} is online\n"
+                failed_hosts.remove(host)
+    return mail_content
 
-while (True):
-    upcheck()
-    time.sleep(timeout)
+def main():
+    while (True):
+        message = get_status_message(ping_targets)
+        send_message(message)
+        time.sleep(timeout)
+
+if __name__ == '__main__':
+    sys.exit(main())
+
