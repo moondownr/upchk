@@ -54,7 +54,6 @@ def send_message(message):
         finally:
             client.quit()
 
-
 def get_status_message(targets):
     mail_content = ""
     for host in targets:
@@ -77,4 +76,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
-
