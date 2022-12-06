@@ -6,6 +6,7 @@ import smtplib
 import ssl
 import time
 import sys
+import platform
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,8 +30,12 @@ mail_subject = """\
 timeout = 300 #time between ping attempts, seconds
 
 def checkifup(host):
-    command = ['ping', "-c", '1', "-w5", host]
-    return subprocess.run(command).returncode == 0
+    if platform.system().lower() == 'windows':
+        command = ['ping', '-n', '1', "-w5", host]
+        return result.returncode == 0 and b'TTL=' in result.stdout
+    else:
+        command = ['ping', '-c', '1', "-w5", host]
+        return subprocess.run(command).returncode == 0
 
 def create_smtp_client(port):
     if port == 25:
