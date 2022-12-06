@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+failed_hosts = set()
+
 # configure via .env file
 smtp_server = os.getenv('SMTP_SERVER')
 smtp_port = int(os.getenv('SMTP_PORT'))
@@ -21,12 +23,6 @@ mail_to = os.getenv('MAIL_TO')
 
 # configure here
 ping_targets = ["google.com","1.1.1.1"]
-failed_hosts = set()
-mail_subject = """\
-    Subject: Failed ping targets
-
-
-    """
 timeout = 300 #time between ping attempts, seconds
 
 def checkifup(host):
@@ -48,12 +44,32 @@ def create_smtp_client(port):
         return client
     raise Exception(f"{port} invalid SMTP port!")
 
+def format_subject(subject):
+    mail_subject = f"""\
+        Subject: {subject}
+
+
+        """
+    return mail_subject
+
+def get_subject(message):
+    subject_line = "Hosts changed status:"
+    if "offline" in message:
+        subject_line += " offline"
+        if "online" in message:
+            subject_line += ", online"
+        return subject_line
+    if "online" in message:
+        subject_line += " online"
+        return subject_line
+
 def send_message(message):
     if message:
+        subject = get_subject(message)
         try:
             client = create_smtp_client(smtp_port)
             client.login(smtp_login, smtp_password)
-            client.sendmail(mail_from, mail_to, mail_subject + message)
+            client.sendmail(mail_from, mail_to, format_subject(subject) + message)
         except Exception as e:
             print(e, file=sys.stderr)
         finally:
@@ -82,3 +98,4 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+    
